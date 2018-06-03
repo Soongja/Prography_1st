@@ -2,18 +2,18 @@
 %USERPROFILE%\AppData\Local\Microsoft\WindowsApps
 
 
-====버전 확인====
+==== 버전 확인 ====
 
-python ?V
+python -V
 pip --version
 
 >>>import cv2
 >>>cv2.__version__
 
 
-====pip / conda====
+==== pip / conda ====
 
-pip install ?r requirements.txt
+pip install -r requirements.txt
 
 pip는 upgrade고 conda는 update
 
@@ -27,15 +27,15 @@ conda update anaconda
 conda env list
 
 
-====가상환경====
-(관리자)conda create ?n py27 python=2.7 anaconda
+==== 가상환경 ====
+(관리자)conda create -n py27 python=2.7 anaconda
 
-(관리자)conda create ?n tensorflow python=3.6 anaconda
+(관리자)conda create -n tensorflow python=3.6 anaconda
 activate tensorflow
 (일반)pip install tensorflow
 
-(관리자)conda create ?n pytorch python=3.6 anaconda
+(관리자)conda create -n pytorch python=3.6 anaconda
 activate pytorch
-(일반)conda install ?c peterjc123 pytorch
-(일반)conda install torchvision ?c soumith
+(일반)conda install -c peterjc123 pytorch
+(일반)conda install torchvision -c soumith
 혹은 pip install torchvision
