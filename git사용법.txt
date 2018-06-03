@@ -1,0 +1,22 @@
+git config --global user.name "Soongja"
+git config --global user.email "david0801@naver.com"
+
+git clone https://github.com/progradeep/GAN-pytorch
+
+cd GAN-pytorch/
+
+ls
+
+cp -r DCGAN/ ACGAN
+
+ls
+
+git pull
+
+git add .
+
+git commit -m "message"
+
+git pull
+
+git push -u origin master

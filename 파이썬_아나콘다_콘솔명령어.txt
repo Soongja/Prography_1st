@@ -1,0 +1,41 @@
+환경변수 TEMP 기본값
+%USERPROFILE%\AppData\Local\Microsoft\WindowsApps
+
+
+====버전 확인====
+
+python ?V
+pip --version
+
+>>>import cv2
+>>>cv2.__version__
+
+
+====pip / conda====
+
+pip install ?r requirements.txt
+
+pip는 upgrade고 conda는 update
+
+conda search sth : 패키지 버전 확인
+
+버전 확인한 후 업그레이드나 다운그레이드 하고 싶으면
+conda install bleach=1.5.0 ->관리자 권한 실행 해봐야 할 수도 있어
+
+conda update conda
+conda update anaconda
+conda env list
+
+
+====가상환경====
+(관리자)conda create ?n py27 python=2.7 anaconda
+
+(관리자)conda create ?n tensorflow python=3.6 anaconda
+activate tensorflow
+(일반)pip install tensorflow
+
+(관리자)conda create ?n pytorch python=3.6 anaconda
+activate pytorch
+(일반)conda install ?c peterjc123 pytorch
+(일반)conda install torchvision ?c soumith
+혹은 pip install torchvision

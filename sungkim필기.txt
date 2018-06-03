@@ -1,0 +1,154 @@
+==================== 1~7강 ==============================
+Tensorflow로는 computational graph를 만드는 것이기 때문에 우선 노드를 만든 다음에는, 그에 따른 session을 만들어 줘야 결과값을 얻어낼 수 있다.
+1.	그래프를 빌드한다
+2.	sess.run을 통해 그래프를 실행
+3.	그래프 속 값들이 업데이트 되거나, 값을 return한다
+tf.constant(“Hello, Tensorflow!”)
+tf.placeholder(tf.float32)
+tf.variable =>얘는 우리가 건드리는 애가 아니라 tensorflow가 사용하는 variable. trainable로 봐도 돼!! 학습하는 과정에서 tensorflow가 변경을 시킨다. 우리가 찾으려는 애
+tf.variable(tf.random_normal([1]), name=’weight’) =>값이 하나인 1차원 array가 들어가네
+Shape = [None] => 1차원 array고 갯수는 몇 개든 될 수 있다
+gradient descent algorithm 쓸 때는 function이 convex function인지 확인해야 함
+tf.matmul => matrix multiply 행렬곱
+feed_dict를 사용하려면 placeholder를 만들어야 한다!
+W의 shape 구할 떄는 [X의 두번째 항, Y의 두번째 항]
+100 20, 1과 같은 score를 0.7 0.2 0.1과 같은 probability로 만들어 주는 것= softmax
+softmax regression에서 0.7 0.2 0.1과 같은 probability들을 1.0 0.0 0.0으로 바꿔주는 것= one-hot encoding
+S(Y)(소프트맥스)와 L=Y(실제 Y)의 차이(cost)를 구해주는 것= cross-entropy
+cross-entropy에서는 예측이 맞았을 때 cost가 0이 됨. 틀리면 cost가 굉장히 커져.
+Y = tf.placeholder(tf.int32, [None, 1]) => shape은 (?, 1)
+Y_one_hot = tf.one_hot(Y, nb_classes) =>one_hot을 적용하면 1차원이 더해져. 예를 들어, [[0], [3]]에다가 one_hot 적용하면 [[[1000000], [0001000]]]이 돼. 그래서 여기까지만 하면 shape이 (?, 1, 7)이 되는데, 우리가 원하는 shape은 (?, 7)이야. 이제 reshape해줘야 해.
+Y_one_hot = tf.reshape(Y_one_hot, [-1, nb_classes]) => -1은 나머지 전부라는 뜻이래.
+softmax할 때 tf.argmax 이 놈은 level 구해 주는 놈. 0~1이라던가 0~6 같은 거.
+y_data = [[0], [1]]일 때, y_data.flatten() = [0, 1]
+리스트 두개를 for문 사용해서, p,y 로 주고싶으면 리스트 애들을 zip으로 묶어.
+X데이터가 너무 길쭉한 타원형이라 normalization하고 싶다?
+1.	X_std[: ,0] = X[: ,0] ? X[: ,0].mean() / X[: ,0].std()
+2.	X = MinMaxScaler(X)
+Overshooting: learning rate가 너무 커서 gradient descent에서 경사 내려가지 못하고 발산
+Overfitting: 내 모델이 학습 데이터랑 너무 잘 맞아서 오히려 새로운 데이터 줬을 때는 잘 못해
+Overfitting solution 1. more training data 2. reduce the number of features 3. regularization
+보통 내가 가지고 있는 자료(original set) 중 일부를 training set으로 사용하고, 모델 만든 다음에, 나머지를 test set으로 사용해서 검증해본다. 그리고 training set 중 또 일부를 validation용으로, 즉 알파 값과 람다 값을 조정하기 위해 사용한다.
+백만 개의 데이터가 있으면 10만 개씩 쪼개서 학습시키고, 학습시킨 데이터는 모델에 남아 있게 하는 걸 online learning이라고 한다. 이렇게 하면 새로운 데이터 10만 개가 또 생겼을 때 110만 개 학습시킬 필요 없고, 10만개만 추가적으로 학습시키면 된다.
+placeholder는 training set이든, test set이든 우리가 던져주는 거 받아먹어서 좋다!
+
+====================== 8강 =========================
+[ ] 의 개수가 rank!
+shape은 (가장 바깥쪽꺼 개수, 그 다음, 그 다음, 가장 안쪽꺼 개수)
+axis는 가장 안쪽꺼가 axis=마지막 수 or -1 가장 바깥쪽꺼가 axis=0
+행렬곱 하려면 matmul해야지 그냥 multiply하면 이상해져 조심해야 해.
+행렬 막 shape 달라도 합이나 곱 할 수 있는데 그걸 broadcasting이라고 해. 근데 broadcasting은 굉장히 조심해서 사용해야 해. 잘 모르면 결과 예상 못함.
+reduce_mean 쓸 때는 숫자들 float이어야 함
+axis= -1로 두고 reduce_sum하고 그 다음 reduce_mean 때리는 거 많이 사용함.
+x = [[0, 1, 2], [2, 1, 0]]에서 tf.argmax(x, axis=0).eval() 때리면 array([1, 0, 0])나와. 0하고 2 중에 2가 크니까 두번째 행렬이 크다고 1 나온거고, 그 다음 같으니 0, 그 다음 2가 크니까 0.
+argmax는 가장 큰 놈의 위치라고 생각해. axis 뭐냐에 따라 argmax의 결과 행렬 shape도 달라짐.
+reshape 정말 중요!!! reshape하면 막 자료 이상해질까봐 걱정하지만 가장 안쪽 예를 들어, (?, ?, 3) 여기의 3은 안 건드려. 그 앞쪽만 reshape해. (-1, 3) 아니면 (-1, 1, 3) 이런 식으로.
+쫙 펴주는 게 squeeze, 디멘션 추가해주는 게 expand
+one_hot 때릴 때는 depth를 줌. 0, 1, 2까지 있으면 depth=3.
+one_hot을 때리면 자동 적으로 디멘션 하나가 expand 돼. 그거 싫으면 reshape해.
+1.8, 4.9 같은 숫자들을 int32로 바꿀 때도 cast 쓸 수 있고, True나 False 같은 애들 1, 0으로 뽑아 낼 때에도 int32 넣고 cast 쓰면 돼.
+stack: x = [1, 4], y = [2, 5], z = [3, 6]일 때, tf.stack([x, y, z]).eval()하면 array([[1, 4], [2, 5], [3, 6]]) 나옴. axis=1주고 stack하면 array([[1, 2, 3], [4, 5, 6]]) 나옴.
+ones_like 때리면 shape 똑같이 유지하고 숫자들 다 1로 바꿔줘. zeros_like 때리면 0.
+for x, y, z in zip([1, 2, 3], [4, 5, 6], [7, 8, 9]):
+	print(x, y, z) 이거 하면
+1 4 7
+2 5 8
+3 6 9 나와.
+
+<정리>
+rank, shape, axis
+matmul vs multiply(broadcasting)
+reduce_mean, reduce_sum
+argmax
+reshape
+squeeze, expand
+one_hot
+cast
+stack
+ones_like, zeros_like
+zip
+
+====================== 9강 =========================
+Wide and deep NN
+여러 개의 layer 사용한다고 할 때 shape를 보면,
+W1 ([x in, out-원하는 넓이(wide)])    b1 ([out])
+W2 ([out, out])    b2 ([out])
+W3 ([out, out])    b3 ([out])
+W4 ([out, 1])    b4([1])
+즉, 원하는 넓이와 원하는 깊이를 정할 수 있다. 넓고 깊어질수록 accuracy 높아진다!
+
+====================== 10강 =========================
+sigmoid 쓰면 x음수였던 애들은 0에 엄청가까운 0.01 막 이런거 나오는데 얘네가 layer 한 10개쯤 통과하면 너무 작아져서 최종 예측값에 대한 영향이 거의 없어져. 이래서 나온게 ReLU(렐루).
+ReLU 계속 쓰다가 마지막에는 0~1 사잇값 출력해야 하므로 한 번 sigmoid를 써.
+초기 W(Weight)값이 0이면 뒤로 미분 때려도 계속 0 돼서 영향이 사라져. 초기 W를 어떻게 설정할까가 엄청 큰 화두였어. 일단 모든 W가 0이면 안 돼. 그리고 초기 W 설정하기 위해RBM이라는 걸 돌려. RBM은 encode/decode 과정이라고도 하는데, 첫번째 두번째 레이어만 묶어서 앞으로 보냈다 다시 뒤로 보내는 과정해서 초기 W 잡고, 그 다음에는 다 무시하고 두번째 세번째 레이어만 묶어서 또 초기 W 값 구해. 이런식으로 레이어 사이사이마다 초기 W 값 구하니까 잘 작동하더라. Fine Tuning이라고도 해.
+하지만 RBM 안 사용해도 된다! 2010, 2015년에 밝혀낸 게, 입력 개수, 출력 개수에 따라 간단하게 초기 W 구해도 잘 되더라.
+Layer가 많아질수록, W의 개수가 늘어날수록 overfitting이 일어나.
+overfitting 줄이는 법: 1. More training data 2. Regularization
+Regularization의 뜻 = Let’s not have too big numbers in the weight. 즉, W가 엄청 많을텐데, 그 중에 한 놈만 엄청 큰 값 갖지 않게 하자. 작은 값을 스무스하게 펼쳐지게.
+Regularization 하려면 cost에 람다시그마w제곱을 더해줘. 람다에 예를들어 0.01 넣으면 regularization을 중요하게 생각한다는 거고 0.1 넣으면 엄청 중요하게 생각한다는 거.
+Dropout => neural network에서 몇몇 노드들을 랜덤하게 쉬게 만드는거야. 몇몇 노드 0으로 죽여놓고 학습한 다음 전체 노드로 테스트하면 훨씬 더 잘 작동된다는 아이디어. Tensorflow에서는 다음 레이어로 보내기 전에 dropout rate 정하고 dropout 시켜서 몇몇 개 죽여놓은 다음에 보내. rate로는 0.5를 많이 써. 노드 하나하나를 전문가라고 생각해봐. 학습시킬 때 전문가 몇 명 빼고 학습시키고 실제 테스트에서는 전문가 모두를 불러오는 거지. evaluation에서는 dropout rate 꼭 1로 해야 해!
+Ensemble(앙상블): 예를 들어, 9단의 neural network를 5개 만들어. 각각 초기값이 다르니까 조금 씩 다르게 나오겠지. 각각 학습시킨 다음에 합쳐. 그래서 결과를 내. 이렇게 하면 적게는 2% 많게는 4~5%까지 성능이 향상 돼.
+fast forward: 여러 레이어가 있을텐데 중간 몇 개를 빠르게 건너뛰고 넘어갈 수도 있어. 이게 Imagenet에서 오차율 3%까지 내린 비결이야.
+split&merge: x값 입력하고 나서 병렬구조처럼 레이어를 몇 갈래로 나눴다가 다시 합칠 수도 있어. 혹은 아예 x값들을 여러 레이어로 따로 따로 입력했다가 다시 레이어 합칠 수도 있어(이게 CNN).
+RNN: 옆으로도 빠져서 막 옆으로 갔다가 앞으로 갔다가 해. 마치 3X3으로 카드 펼쳐논 것처럼.
+
+softmax_cross_entropy_with_logits(hypothesis, Y)를 했다는 건 위에서 hypothesis에 softmax 적용하지 않아서 hypothesis가 현재 숫자값들이라는 뜻이야
+logits는 activation을 거치지 않은 애들을 말해. 마지막 부분은 activation 안 하고 넣자나.
+AdamOptimizer(2015): 현존하는 optimizer 중 제일 좋아. GradientDescent보다 굿
+Xavier Initialization: W 초기값 잘 정하는 방법 중 하나야.
+
+MNIST 데이터에 좋은 것들 하나씩 더 적용할 때 accuracy
+softmax => 91%
+NN => 94%
+NN + Xavier Initialization => 97%
+NN + Xavier Initialization + more deep + dropout! => 98%
+여기다 Adam Optimizer까지 쓰면 더 빠르게 결과에 도착할 수 있어.
+
+====================== 11강 CNN =========================
+Image.shape(1, 3, 3, 1) #1은 이미지의 개수, #2, 3는 몇 by 몇 이미지인지. #4는 color
+Weight.shape(2, 2, 1, 1) #1, 2는 몇 by 몇 짜리 필터인지. #3은 color #4는 필터의 개수
+위의 두 개 적용하면 나오는 이미지의 shape은 (1, 2, 2, 1)이겠지
+Padding 옵션을 same으로 주면, stride가 1x1인 경우에 한해, 필터사이즈가 뭐냐에 관계없이 원래 이미지랑 같은 사이즈의 이미지 나오게 해줘.
+Padding은 무조건 네 모서리 꽉 채우는 거 아니네.
+필터 3장 쓰고 싶으면 (2, 2, 1, 3)이 될 거고, 이 놈의 weight 나타내는 행렬은
+?	[[[[1., 10. -1.]], [[1., 10. -1.]]], [[[1., 10., -1.]], [[1., 10., -1.]]]]
+?	얘 펼쳐보면 (2, 2, 1, 3)이자나.
+Max pooling 할 때는 tf.nn.max_pool 함수 쓰고, kernel 사이즈 즉, ksize 넣어줘.
+Max pooling 할 때에도 padding을 same으로 해서 똑 같은 크기 이미지 뽑아낼 수 있어.
+MNIST데이터 가져와서 이미지 로드할 때 (-1, 28, 28, 1) 이렇게 하는데 -1이 뭐냐면, 첫 째 자리가 이미지 개수 말하는 건데, n개니까 너가 알아서 계산하라는 거야. 그럴 때 -1.
+stride가 (1, 2, 2, 1)이야. 그러면 두 칸 씩 움직이겠다는 거고, padding을 same으로 하게 되면 28x28짜리 이미지가 14x14가 돼(stride가 1x1일 때는 28x28로 그대로 남아).
+이미지 처음에 받은 다음 reshape하면 진짜 이미지의 모양(정사각형 같은)이 되고, convolutional layer 다 거친 다음에 Fully connected layer로 넣기 전에 다시 reshape하면 세로로 길쭉한 모양으로 바뀐다고 생각하면 이해 돼. 세로 길쭉한 자료들을 fully connected로 보내주는 거지.
+class 만들어서 사용하면 좋아!
+tf.layers에 있는 api들 사용하면 구찮게 다 입력 안해도 돼.
+tf.layers로 dropout 할 때, training인지 아닌지 구분할 수 있고, training 아닌 경우에는 dropout rate 자동으로 1이 되게 만들어놔서 실수 예방할 수 있어.
+tf.layers의 dense라는 api 사용하면, 일일히 weight의 개수 구하는 등 귀찮은 거 안해도 돼.
+ensemble은 모델을 여러 개 만들고 새로운 training data가 들어오면 모델마다 각각 예측을 하고 그걸 한 데 모아 최종 예측을 하는건데, 성능이 좋아.
+ensemble에서 예측 다 모으는 방식을 우리 강의에서는 간단하게 softmax 숫자들 다 합쳐보는 걸로 했어. 다 합친 다음에 argmax 때려서 예측값 하나 뽑는거지.
+
+====================== 12강 RNN =========================
+RNN 이전의 모델들(NN, CNN)은 sequence data를 처리하기 어려웠어. 그래서 생각해낸 게 RNN.
+RNN은 state의 개념. 현재 state를 계산할 때는 이전 state와 현재 x를 이용해.
+이전 state와 현재 x 사용한다는 건 RNN의 모든 state에 동일하게 적용되기 때문에 사람들이 RNN 그림으로 나타낼 때 걍 state하나 그리고 자기한테 돌아오는 것처럼 그려.
+딥러닝에서 사람들이 가장 좋아하는 건 WX. 따라서 h t-1이랑 x t에도 각각 웨이트 곱해서 더해주고, 거기서 나온 h t에 또 웨이트 곱해서 y 구해. tanh는 sigmoid랑 같은 거야.
+웨이트 3개는 모든 state에 동일하게 적용.
+현재 글자가 이거일 때 다음 글자가 뭘까 예측 하는 게 영상의 language model. h 다음엔 e가 올 것이다 하는거.
+RNN 활용분야: language modeling, speech recognition, machine translation, conversation modeling/question answering, image/video captioning, image/music/dance generation
+RNN 구조
+?	one to one: vanilla neural networks
+?	one to many: image captioning
+?	many to one: sentiment classification
+?	many to many(엇갈린 거): machine translation
+?	many to many(직사각형 모양): video classification on frame level
+state에도 여러 개의 layer를 만들 수 있어.
+RNN 자체는 학습시키기 어렵기 때문에, Long Short Term Memory(LSTM) 혹은 GRU라는 모델을 쓰게 된다.
+state라고 말한 거 RNN 구현할 때는 cell이라고 불러.
+num_units = hidden_size 요거는 출력 값 몇 개로 나올지 정해주는 거야.
+입력값 (3, 5, 4)에서 3은 batch size, 5는 sequence length, 4는 input dimension
+출력값, (3, 5, 2)에서 3은 batch size, 5는 sequence length, 2는 hidden size
+hidden size는 구현할 때 rnn_size!
+RNN parameters(결국 4개의 데이터가 필요): hidden_size, input_dim, batch_size, sequence_length
+sequence_loss라는 함수 이용해서 예측이랑 실제랑 차이로 cost구할 수 있어. 여기서 weight는 다 1이라고 생각하면 돼.
+RNN에서 나온 값 바로 sequence_loss의 logits로 넣는 거 잘못된 방법이야. 간단하게 하려고 실습2에서 그렇게 넣어 본거야. 더 배워보니 softmax 쓴 다음 넣네
+hidden_size는 rnn에서 바로 나온 놈의 dimension이고, num_classes는 최종 예측하고자 하는 놈의 one_hot의 dimension이야. 숫자는 같겠지만 다른 개념.
+logits는 activation을 거치지 않은 output이라는 개념 또 기억하자.
+예전에는 batch마다 sequence length가 다른 경우 padding을 했었는데, 이게 loss에 영향을 미쳐서 혼란스럽게 했어. 근데 dynamic rnn에서는 sequence length를 알려주면 그 length 빼고는 다 출력값을 0으로 만들어줘. 예를 들어 sequence length를 5, 3, 4 이렇게 주면 3에서는 나머지 두 개의 출력값을 0을 만들어 버리고, 4에서는 나머지 하나를 0을 만들어 버려. 이렇게 해서 loss에 영향 안 미치고 깔끔하게 해결할 수 있게 됐어.
