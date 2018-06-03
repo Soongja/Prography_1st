@@ -1,0 +1,34 @@
+# 압축풀기
+mkdir 폴더명
+unzip 압축파일.zip -d ./폴더명
+
+tar -jxvf videos-0.tar.bz2 -C ./train/
+
+# 디스크 사용량
+df -k
+
+# 파일 삭제
+rm 파일명
+
+# 디렉터리 삭제
+rm -r 디렉터리명/
+
+# 쉘스크립트
+vi download.sh
+i (insert모드로 변경)
+만들어놓은 쉘스크립트 복붙
+esc눌러서 insert모드 해제
+:wq (저장하고 나가기)
+ls 입력해서 쉘스크립트 생겼나 보기
+chmod +x download.sh (x가 실행할 수 있는 권한임)
+./download.sh 입력하면 실행됨
+
+wget -P 경로 URL
+
+#지정한 폴더 이하 파일 개수 세기
+find /폴더/경로 -type f | wc -l(엘)
+
+#루트 디렉터리로 이동
+cd /
+#홈 디렉터리로 이동
+cd ~
