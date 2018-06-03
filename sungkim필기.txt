@@ -118,7 +118,7 @@ split&merge: x값 입력하고 나서 병렬구조처럼 레이어를 몇 갈래로 나눴다가 다시 합�
 혹은 아예 x값들을 여러 레이어로 따로 따로 입력했다가 다시 레이어 합칠 수도 있어(이게 CNN).
 RNN: 옆으로도 빠져서 막 옆으로 갔다가 앞으로 갔다가 해. 마치 3X3으로 카드 펼쳐논 것처럼.
 
-softmax_cross_entropy_with_logits(hypothesis, Y)를 했다는 건 위에서 hypothesis에 softmax 적용하지 않아서 hypothesis가 현재 숫자값들이라는 뜻
+softmax_cross_entropy_with_logits(hypothesis, Y)를 했다는 건 위에서 hypothesis에 softmax 적용하지 않아서 hypothesis가 현재 숫자값들이라는 뜻.
 logits는 activation을 거치지 않은 애들을 말해. 마지막 부분은 activation 안 하고 넣자나.
 AdamOptimizer(2015): 현존하는 optimizer 중 제일 좋아. GradientDescent보다 굿
 Xavier Initialization: W 초기값 잘 정하는 방법 중 하나야.
@@ -172,11 +172,11 @@ RNN은 state의 개념. 현재 state를 계산할 때는 이전 state와 현재 x를 이용해.
 RNN 활용분야: language modeling, speech recognition, machine translation, conversation modeling/question answering,
 image/video captioning, image/music/dance generation
 RNN 구조
-?	one to one: vanilla neural networks
-?	one to many: image captioning
-?	many to one: sentiment classification
-?	many to many(엇갈린 거): machine translation
-?	many to many(직사각형 모양): video classification on frame level
+one to one: vanilla neural networks
+one to many: image captioning
+many to one: sentiment classification
+many to many(엇갈린 거): machine translation
+many to many(직사각형 모양): video classification on frame level
 state에도 여러 개의 layer를 만들 수 있어.
 RNN 자체는 학습시키기 어렵기 때문에, Long Short Term Memory(LSTM) 혹은 GRU라는 모델을 쓰게 된다.
 state라고 말한 거 RNN 구현할 때는 cell이라고 불러.
