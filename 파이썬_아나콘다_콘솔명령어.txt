@@ -45,4 +45,4 @@ conda install pytorch-cpu -c pytorch
 
 
 ==== 패키치 설치 ====
-conda install opencv
+conda install opencv  pip install opencv-python
