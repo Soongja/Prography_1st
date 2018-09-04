@@ -42,3 +42,7 @@ conda install -c peterjc123 pytorch-cpu
 <파이토치 0.4 깔고 싶을때>
 conda install pytorch-cpu -c pytorch
 (일반)pip install torchvision
+
+
+==== 패키치 설치 ====
+conda install opencv
