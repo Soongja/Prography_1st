@@ -1,8 +1,8 @@
-È¯°æº¯¼ö TEMP ±âº»°ª
+í™˜ê²½ë³€ìˆ˜ TEMP ê¸°ë³¸ê°’
 %USERPROFILE%\AppData\Local\Microsoft\WindowsApps
 
 
-==== ¹öÀü È®ÀÎ ====
+==== ë²„ì „ í™•ì¸ ====
 
 python -V
 pip --version
@@ -15,27 +15,30 @@ pip --version
 
 pip install -r requirements.txt
 
-pip´Â upgrade°í conda´Â update
+pipëŠ” upgradeê³  condaëŠ” update
 
-conda search sth : ÆĞÅ°Áö ¹öÀü È®ÀÎ
+conda search sth : íŒ¨í‚¤ì§€ ë²„ì „ í™•ì¸
 
-¹öÀü È®ÀÎÇÑ ÈÄ ¾÷±×·¹ÀÌµå³ª ´Ù¿î±×·¹ÀÌµå ÇÏ°í ½ÍÀ¸¸é
-conda install bleach=1.5.0 ->°ü¸®ÀÚ ±ÇÇÑ ½ÇÇà ÇØºÁ¾ß ÇÒ ¼öµµ ÀÖ¾î
+ë²„ì „ í™•ì¸í•œ í›„ ì—…ê·¸ë ˆì´ë“œë‚˜ ë‹¤ìš´ê·¸ë ˆì´ë“œ í•˜ê³  ì‹¶ìœ¼ë©´
+conda install bleach=1.5.0 ->ê´€ë¦¬ì ê¶Œí•œ ì‹¤í–‰ í•´ë´ì•¼ í•  ìˆ˜ë„ ìˆì–´
 
 conda update conda
 conda update anaconda
 conda env list
 
 
-==== °¡»óÈ¯°æ ====
-(°ü¸®ÀÚ)conda create -n py27 python=2.7 anaconda
+==== ê°€ìƒí™˜ê²½ ====
+(ê´€ë¦¬ì)conda create -n py27 python=2.7 anaconda
 
-(°ü¸®ÀÚ)conda create -n tensorflow python=3.6 anaconda
+(ê´€ë¦¬ì)conda create -n tensorflow python=3.6 anaconda
 activate tensorflow
-(ÀÏ¹İ)pip install tensorflow
+(ì¼ë°˜)pip install tensorflow
 
-(°ü¸®ÀÚ)conda create -n pytorch python=3.6 anaconda
+(ê´€ë¦¬ì)conda create -n pytorch python=3.6 anaconda
 activate pytorch
-(ÀÏ¹İ)conda install -c peterjc123 pytorch
-(ÀÏ¹İ)conda install torchvision -c soumith
-È¤Àº pip install torchvision
+(ì¼ë°˜)
+<íŒŒì´í† ì¹˜ 0.3.1 ê¹”ê³  ì‹¶ì„ë•Œ>
+conda install -c peterjc123 pytorch-cpu
+<íŒŒì´í† ì¹˜ 0.4 ê¹”ê³  ì‹¶ì„ë•Œ>
+conda install pytorch-cpu -c pytorch
+(ì¼ë°˜)pip install torchvision
