@@ -1,3 +1,5 @@
+git remote add origin https://Soongja@bitbucket.org/Soongja/segxy_segmentation
+
 git config --global user.name "Soongja"
 git config --global user.email "david0801@naver.com"
 
